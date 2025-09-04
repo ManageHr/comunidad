@@ -30,6 +30,7 @@ class PermisosService {
             null
         }
     }
+    // Esta funcion fue creada para no consumirla por HTTP si no para manejarla internamente, cundo creamos un permiso y poder obtener el id
     fun getMaxId(): Long?{
         var sql="SELECT max(id) as id FROM permisos"
 
