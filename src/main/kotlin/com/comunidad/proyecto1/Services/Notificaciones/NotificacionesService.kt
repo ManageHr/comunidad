@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.time.LocalDate
 
 @Service
 class NotificacionesService(private val  jdbc : JdbcTemplate) {
@@ -48,6 +49,30 @@ class NotificacionesService(private val  jdbc : JdbcTemplate) {
                 WHERE leida = ?
             """.trimIndent()
         return jdbc.query(sql,rowMapper,status)
+    }
+
+    fun findByDate(fecha: LocalDate): List<NotificacionesDto> {
+        val sql = """
+        SELECT id, usuario_id, aviso_id, tipo, mensaje, leida, fecha_creacion
+        FROM notificaciones
+        WHERE fecha_creacion >= ? AND fecha_creacion < ?
+        ORDER BY id ASC
+    """.trimIndent()
+        val inicio = Timestamp.valueOf(fecha.atStartOfDay())
+        val fin = Timestamp.valueOf(fecha.plusDays(1).atStartOfDay())
+        return jdbc.query(sql, rowMapper, inicio, fin)
+    }
+
+    fun findByDateRange(desde: LocalDate, hasta: LocalDate): List<NotificacionesDto> {
+        val sql = """
+        SELECT id, usuario_id, aviso_id, tipo, mensaje, leida, fecha_creacion
+        FROM notificaciones
+        WHERE fecha_creacion >= ? AND fecha_creacion < ?
+        ORDER BY id ASC
+    """.trimIndent()
+        val inicio = Timestamp.valueOf(desde.atStartOfDay())
+        val fin = Timestamp.valueOf(hasta.plusDays(1).atStartOfDay())
+        return jdbc.query(sql, rowMapper, inicio, fin)
     }
 
     fun create(dto: NotificacionesDto): Int {

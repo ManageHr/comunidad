@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/notificaciones")
@@ -54,6 +55,32 @@ class NotificacionesController {
         val data = service.findByStatus(leida)
         return if (data.isEmpty()) ResponseEntity.noContent().build()
         else ResponseEntity.ok(data)
+    }
+    @GetMapping("/por-fecha")
+    fun getPorFecha(@RequestParam fecha: String): ResponseEntity<Any> {
+        return try {
+            val dia = LocalDate.parse(fecha) // formato: YYYY-MM-DD
+            val data = service.findByDate(dia)
+            if (data.isEmpty()) ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+            else ResponseEntity.ok(data)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest()
+                .body(mapOf("mensaje" to "Formato de fecha inválido. Usa YYYY-MM-DD"))
+        }
+    }
+
+    @GetMapping("/por-rango")
+    fun getPorRango(@RequestParam desde: String, @RequestParam hasta: String): ResponseEntity<Any> {
+        return try {
+            val d1 = LocalDate.parse(desde)
+            val d2 = LocalDate.parse(hasta)
+            val data = service.findByDateRange  (d1, d2)
+            if (data.isEmpty()) ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+            else ResponseEntity.ok(data)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest()
+                .body(mapOf("mensaje" to "Fechas inválidas. Usa YYYY-MM-DD"))
+        }
     }
 
     @PostMapping
