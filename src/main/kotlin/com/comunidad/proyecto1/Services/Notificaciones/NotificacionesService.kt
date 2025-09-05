@@ -1,6 +1,6 @@
-package com.comunidad.proyecto1.Services.Permisos
+package com.comunidad.proyecto1.Services.Notificaciones
 
-import com.comunidad.proyecto1.Dtos.Permisos.NotificacionesDto
+import com.comunidad.proyecto1.Dtos.Notficaciones.NotificacionesDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Service
@@ -9,9 +9,9 @@ import java.sql.Timestamp
 @Service
 class NotificacionesService(private val  jdbc : JdbcTemplate) {
 
-    private val rowMapper = RowMapper { rs , _ : Int ->
+    private val rowMapper = RowMapper { rs, _: Int ->
         NotificacionesDto(
-            id =rs.getInt("id"),
+            id = rs.getInt("id"),
             usuario_id = rs.getLong("usuario_id"),
             aviso_id = rs.getLong("aviso_id"),
             tipo = rs.getString("tipo"),

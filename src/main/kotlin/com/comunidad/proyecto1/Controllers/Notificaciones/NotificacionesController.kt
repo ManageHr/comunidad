@@ -1,7 +1,7 @@
-package com.comunidad.proyecto1.Controllers.Permisos
+package com.comunidad.proyecto1.Controllers.Notificaciones
 
-import com.comunidad.proyecto1.Dtos.Permisos.NotificacionesDto
-import com.comunidad.proyecto1.Services.Permisos.NotificacionesService
+import com.comunidad.proyecto1.Dtos.Notficaciones.NotificacionesDto
+import com.comunidad.proyecto1.Services.Notificaciones.NotificacionesService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

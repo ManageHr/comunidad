@@ -1,7 +1,5 @@
-package com.comunidad.proyecto1.Dtos.Permisos
+package com.comunidad.proyecto1.Dtos.Notficaciones
 
-import java.math.BigInteger
-import java.sql.Date
 import java.sql.Timestamp
 
 class NotificacionesDto(
