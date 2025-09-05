@@ -1,6 +1,7 @@
 package com.comunidad.proyecto1.Controllers.Usuarios
 
 import com.comunidad.proyecto1.Dtos.Usuarios.UsuariosDto
+import com.comunidad.proyecto1.Services.Registros.RegistrosService
 import com.comunidad.proyecto1.Services.Usuarios.UsuariosService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 class UsuariosController {
     @Autowired
     lateinit var usuariosService: UsuariosService
+    lateinit var registrosService: RegistrosService
     @GetMapping
     fun getAll(): ResponseEntity<Any>{
         var consulta=usuariosService.getALl()
@@ -64,6 +66,8 @@ class UsuariosController {
         )
 
         return if (usuario != null) {
+
+
             ResponseEntity.ok("Usuario logeado con exito")
 
         } else {
