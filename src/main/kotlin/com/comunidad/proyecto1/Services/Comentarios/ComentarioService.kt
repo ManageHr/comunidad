@@ -4,6 +4,8 @@ import com.comunidad.proyecto1.Dtos.Comentarios.ComentarioDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.sql.Timestamp
 
 @Service
 class ComentarioService(private val jdbc: JdbcTemplate) {
@@ -45,6 +47,29 @@ class ComentarioService(private val jdbc: JdbcTemplate) {
             ORDER BY id ASC
         """.trimIndent()
         return jdbc.query(sql, rowMapper, estado)
+    }
+    fun findByDate(fecha: LocalDate): List<ComentarioDto> {
+        val sql = """
+        SELECT id, aviso_id, usuario_id, contenido, estado, fecha
+        FROM comentarios
+        WHERE fecha >= ? AND fecha < ?
+        ORDER BY id ASC
+    """.trimIndent()
+        val inicio = Timestamp.valueOf(fecha.atStartOfDay())
+        val fin = Timestamp.valueOf(fecha.plusDays(1).atStartOfDay())
+        return jdbc.query(sql, rowMapper, inicio, fin)
+    }
+
+    fun findByDateRange(desde: LocalDate, hasta: LocalDate): List<ComentarioDto> {
+        val sql = """
+        SELECT id, aviso_id, usuario_id, contenido, estado, fecha
+        FROM comentarios
+        WHERE fecha >= ? AND fecha < ?
+        ORDER BY id ASC
+    """.trimIndent()
+        val inicio = Timestamp.valueOf(desde.atStartOfDay())
+        val fin = Timestamp.valueOf(hasta.plusDays(1).atStartOfDay())
+        return jdbc.query(sql, rowMapper, inicio, fin)
     }
 
     fun create(dto: ComentarioDto): Int {

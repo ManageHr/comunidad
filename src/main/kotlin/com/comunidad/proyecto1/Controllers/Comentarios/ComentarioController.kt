@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/comentarios")
@@ -33,6 +34,33 @@ class ComentarioController {
         val data = service.findByEstado(estado)
         return if (data.isEmpty()) ResponseEntity.status(HttpStatus.NO_CONTENT).build()
         else ResponseEntity.ok(data)
+    }
+    @GetMapping("/por-fecha")
+    fun getPorFecha(@RequestParam fecha: String): ResponseEntity<Any> {
+        return try {
+            val dia = LocalDate.parse(fecha) // formato: YYYY-MM-DD
+            val data = service.findByDate(dia)
+            if (data.isEmpty()) ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+            else ResponseEntity.ok(data)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(mapOf("mensaje" to "Formato de fecha inválido. Usa YYYY-MM-DD"))
+        }
+    }
+
+    @GetMapping("/por-rango")
+    fun getPorRango(
+        @RequestParam desde: String,
+        @RequestParam hasta: String
+    ): ResponseEntity<Any> {
+        return try {
+            val d1 = LocalDate.parse(desde) // YYYY-MM-DD
+            val d2 = LocalDate.parse(hasta) // YYYY-MM-DD
+            val data = service.findByDateRange(d1, d2)
+            if (data.isEmpty()) ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+            else ResponseEntity.ok(data)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(mapOf("mensaje" to "Fechas inválidas. Usa YYYY-MM-DD"))
+        }
     }
 
     @PostMapping
